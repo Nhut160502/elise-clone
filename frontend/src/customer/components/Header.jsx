@@ -18,13 +18,16 @@ import { openSlibar } from "../providers/slibarSlice";
 import { memo, useEffect, useState } from "react";
 import Overlay from "./Overlay";
 import { closeCart, openCart } from "../providers/cartSlice";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 function Header() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state?.cart);
   const [sticky, setSticky] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
+  const location = useLocation();
+  const { slugCollection } = useParams();
+  const [headerTransparent, setHeaderTransparent] = useState(false);
 
   const handleScroll = () => {
     if (window.scrollY > 0) {
@@ -41,9 +44,22 @@ function Header() {
     };
   }, []);
 
+  console.log();
+  useEffect(() => {
+    location.pathname.includes(`/lookbook/${slugCollection}`) &&
+      setHeaderTransparent(true);
+  }, [location]);
+
   return (
     <Wrapper className={sticky && "pd"}>
-      <Container className={sticky && "sticky"}>
+      <Container
+        className={
+          (sticky && headerTransparent && "sticky") ||
+          (sticky && !headerTransparent && "sticky") ||
+          (!sticky && !headerTransparent && "") ||
+          (!sticky && headerTransparent && "transparent")
+        }
+      >
         <Row>
           <Col sm="4">
             <Left>
@@ -187,6 +203,35 @@ const Wrapper = styled.div`
   padding-bottom: 144px;
   &.pd {
     padding-bottom: 0;
+  }
+  button {
+    background-color: transparent;
+    svg {
+      color: #000;
+    }
+  }
+
+  .transparent {
+    background-color: transparent !important;
+    button {
+      svg {
+        color: #fff;
+      }
+    }
+    form {
+      span {
+        color: #fff;
+      }
+      input {
+        color: #fff;
+        border-color: #fff;
+      }
+    }
+    .menu-item {
+      a {
+        color: #fff;
+      }
+    }
   }
 `;
 
@@ -374,6 +419,7 @@ const Container = styled.div`
     position: fixed;
     top: 0;
     padding: 20px 40px;
+    z-index: 999999;
   }
 `;
 const Left = styled.div`

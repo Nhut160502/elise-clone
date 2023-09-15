@@ -15,6 +15,7 @@ import navSlice from "../customer/providers/navSlice";
 import cartSlice from "../customer/providers/cartSlice";
 import categoriesSlice from "../customer/providers/categoriesSlice";
 import typesSlice from "../customer/providers/typesSlice";
+import productsSlice from "../customer/providers/productsSlice";
 
 const persistConfig = {
   key: "root",
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   types: typesSlice,
   categories: categoriesSlice,
+  products: productsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

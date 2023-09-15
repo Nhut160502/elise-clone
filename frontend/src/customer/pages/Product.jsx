@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { styled } from "styled-components";
 import Quantity from "../components/Quantity";
@@ -7,12 +7,15 @@ import { RightOutlined, CloseOutlined } from "@ant-design/icons";
 import Overlay from "../components/Overlay";
 import { useDispatch } from "react-redux";
 import { closeCart } from "../providers/cartSlice";
-
+import { getProduct } from "../services/customer";
+import { useParams } from "react-router-dom";
 function Product() {
   const dispatch = useDispatch();
+  const { slugProduct } = useParams();
+  const [product, setProduct] = useState([]);
   const [visibility, setVisibility] = useState(false);
   const [guide, setGuide] = useState({ type: "" });
-  const [size, setSize] = useState("");
+  const [sizeActive, setSizeActive] = useState("");
 
   const handleCloseGuide = () => {
     setGuide({ type: "", scroll: "" });
@@ -26,50 +29,35 @@ function Product() {
     }, 3000);
   };
 
+  useEffect(() => {
+    getProduct(slugProduct)
+      .then((res) => {
+        setProduct(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <Wrapper>
       <Row>
         <Col sm="6" className="left">
           <div className="image">
-            <div className="item">
-              <img
-                src="https://elise.vn/media/catalog/product/cache/bb52e54e5ec1828d48ae8bf7c98f9f69/f/s/fs2305279dxorpl2.jpg"
-                alt=""
-              />
-            </div>
-            <div className="item">
-              <img
-                src="https://elise.vn/media/catalog/product/cache/bb52e54e5ec1828d48ae8bf7c98f9f69/f/s/fs2305279dxorpl2.jpg"
-                alt=""
-              />
-            </div>
-            <div className="item">
-              <img
-                src="https://elise.vn/media/catalog/product/cache/bb52e54e5ec1828d48ae8bf7c98f9f69/f/s/fs2305279dxorpl2.jpg"
-                alt=""
-              />
-            </div>
-            <div className="item">
-              <img
-                src="https://elise.vn/media/catalog/product/cache/bb52e54e5ec1828d48ae8bf7c98f9f69/f/s/fs2305279dxorpl2.jpg"
-                alt=""
-              />
-            </div>
-            <div className="item">
-              <img
-                src="https://elise.vn/media/catalog/product/cache/bb52e54e5ec1828d48ae8bf7c98f9f69/f/s/fs2305279dxorpl2.jpg"
-                alt=""
-              />
-            </div>
+            {product?.imgUrl?.map((img) => (
+              <div className="item">
+                <img src={img} alt={product?.name} />
+              </div>
+            ))}
           </div>
         </Col>
         <Col sm="6" className="right">
           <div className="sticky">
             <div className="name">
-              <h1>ĐẦM TƠ KẺ NỀN XANH BÈO CỔ TRỄ VAI</h1>
+              <h1>{product?.name}</h1>
             </div>
             <div className="price">
-              <span>2.098.000 VND</span>
+              <span>{product?.price} VND</span>
             </div>
             <div className="attribute">
               <div
@@ -84,23 +72,17 @@ function Product() {
                   Chi Tiết
                 </div>
                 <p>
-                  Thiết kế đầm tơ trễ vai với họa tiết kẻ sọc cùng đường may
-                  tinh xảo, sản phẩm mang lại cảm giác thoải mái dễ chịu cho
-                  người mặc.Thiết kế có thể kế hợp cùng giày cao gót, sandal và
-                  các phụ kiện đi kèm. Sản phẩm phù hợp diện đi dạo phố, hẹn hò
-                  cùng bạn bè, gia đình.
+                  {product?.desc}
                   <br />
-                  Dòng hàng: Đầm
+                  Dòng hàng: {product?.categorires?.name}
                   <br />
-                  Chất liệu: Tơ
+                  Chất liệu: {product?.materials?.name}
                   <br />
-                  Màu sắc: Kẻ xanh
+                  Màu sắc: {product?.colors?.name}
                   <br />
-                  Kiểu dáng: Trễ vai
+                  Kiểu dáng: {product?.designs?.name}
                   <br />
-                  Giặt và bảo quản: Nên giặt tay bằng nước lạnh, hạn chế giặt
-                  bằng nước nóng quá 40 độ C. Giặt riêng với các sản phẩm dễ
-                  phai màu. Bảo quản nơi khô thoáng, tránh ánh nắng trực tiếp.
+                  Giặt và bảo quản: {product?.note}
                 </p>
               </div>
               <div
@@ -121,58 +103,23 @@ function Product() {
                     <span>Kích Thước</span>
                   </div>
                   <div className="control">
-                    <div
-                      onClick={(e) => {
-                        if (size === e.target.id) {
-                          setSize("");
-                        } else {
-                          setSize(e.target.id);
+                    {product?.sizes?.map((size) => (
+                      <div
+                        className={
+                          size._id === sizeActive
+                            ? "item-control active"
+                            : "item-control"
                         }
-                      }}
-                      id="size-1"
-                      className={size ? "item-control active" : "item-control"}
-                    >
-                      S
-                    </div>
-                    <div
-                      onClick={(e) => {
-                        if (size === e.target.id) {
-                          setSize("");
-                        } else {
-                          setSize(e.target.id);
+                        id={size._id}
+                        onClick={() =>
+                          sizeActive === size._id
+                            ? setSizeActive("")
+                            : setSizeActive(size._id)
                         }
-                      }}
-                      id="size-2"
-                      className={size ? "item-control active" : "item-control"}
-                    >
-                      M
-                    </div>
-                    <div
-                      onClick={(e) => {
-                        if (size === e.target.id) {
-                          setSize("");
-                        } else {
-                          setSize(e.target.id);
-                        }
-                      }}
-                      id="size-3"
-                      className={size ? "item-control active" : "item-control"}
-                    >
-                      L
-                    </div>
-                    <div
-                      onClick={(e) => {
-                        if (size === e.target.id) {
-                          setSize("");
-                        } else {
-                          setSize(e.target.id);
-                        }
-                      }}
-                      id="size-4"
-                      className={size ? "item-control active" : "item-control"}
-                    >
-                      XL
-                    </div>
+                      >
+                        {size.name}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="quantity item-form">

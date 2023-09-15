@@ -4,7 +4,37 @@ import Product from "../components/Product";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import { useEffect } from "react";
+import { getCategories, getTypes, getProducts } from "../services/customer";
+import { useDispatch, useSelector } from "react-redux";
+import { reducerProducts } from "../providers/productsSlice";
+import { getDataCategories } from "../providers/categoriesSlice";
+import { getDataTypes } from "../providers/typesSlice";
 function Home() {
+  const dispatch = useDispatch();
+
+  const products = useSelector((state) => state?.products?.data);
+  useEffect(() => {
+    getProducts()
+      .then((res) => {
+        dispatch(reducerProducts(res.data));
+      })
+      .catch((err) => console.log(err));
+
+    getTypes()
+      .then((res) => {
+        dispatch(getDataTypes(res.data));
+      })
+      .catch((err) => console.log(err));
+
+    getCategories()
+      .then((res) => {
+        dispatch(getDataCategories(res.data));
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  console.log(products);
   return (
     <Wrapper>
       <Slibar />
@@ -14,30 +44,11 @@ function Home() {
         </Top>
         <Content>
           <Row>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
-            <Col sm="3">
-              <Product />
-            </Col>
+            {products?.map((product) => (
+              <Col sm="3">
+                <Product data={product} />
+              </Col>
+            ))}
           </Row>
         </Content>
         <Bottom>

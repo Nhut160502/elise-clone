@@ -12,6 +12,8 @@ import designRouter from "./design.js";
 import materialRouter from "./material.js";
 import categoriesController from "../controllers/customer/categoriesController.js";
 import typesController from "../controllers/customer/typesController.js";
+import productsController from "../controllers/customer/productsController.js";
+import collectionsController from "../controllers/customer/collectionsController.js";
 
 const router = express.Router();
 
@@ -30,5 +32,8 @@ router.use("/material", authMiddleware.verifyToken, materialRouter);
 // customer
 router.get("/customer/categories", categoriesController.index);
 router.get("/customer/types", typesController.index);
+router.get("/customer/products", productsController.index);
+router.get("/customer/products/:slug", productsController.show);
+router.get("/customer/collections", collectionsController.index);
 
 export default router;

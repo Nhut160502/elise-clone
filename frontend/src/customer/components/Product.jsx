@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
-const Product = ({ className, size }) => {
+const Product = ({ className, size, data }) => {
   const [hover, setHover] = useState(false);
   return (
     <Wrapper className={className}>
@@ -10,26 +10,23 @@ const Product = ({ className, size }) => {
         onMouseOver={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
-        <Link to="/sm-ren-hoa-den-phoi-to-den.html">
+        <Link to={`/p/${data?.slug}.html`}>
+          <img src={data?.imgUrl[0]} alt={data?.name} />
           <img
-            src="https://elise.vn/media/catalog/product/cache/b35d2052d2e1ce5f6cbaec523842ed65/f/s/fs2305146tllabk3.jpg"
-            alt=""
-          />
-          <img
-            src="https://elise.vn/media/catalog/product/cache/f677d7e3a5087b6a18a5b1f320b78594/f/s/fs2305146tllabk.jpg"
-            alt=""
             className={(hover && "hover active") || "hover"}
+            src={data?.imgUrl[1]}
+            alt={data?.name}
           />
         </Link>
       </Image>
       <InFor>
         <div className="name">
-          <Link to="/sm-ren-hoa-den-phoi-to-den">
-            <h5>SM REN HOA ĐEN PHỐI TƠ ĐEN</h5>
+          <Link to={`/p/${data?.slug}.html`}>
+            <h5>{data?.name}</h5>
           </Link>
         </div>
         <div className="price">
-          <span>1.198.000 VND</span>
+          <span>{data?.price} VND</span>
         </div>
 
         {size && (
@@ -71,6 +68,7 @@ const InFor = styled.div`
   .name {
     margin-bottom: 6px;
     line-height: 1.1;
+    text-transform: uppercase;
     a {
       display: inline-block;
       transition: all 0.2s;

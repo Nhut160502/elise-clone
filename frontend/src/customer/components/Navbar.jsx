@@ -8,9 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeSlibar } from "../providers/slibarSlice";
 import Loading from "../../auth/components/Loading";
 import { idNavOpen } from "../providers/navSlice";
-import { customerGetCategories, customerGetTypes } from "../services/customer";
-import { getDataCategories } from "../providers/categoriesSlice";
-import { getDataTypes } from "../providers/typesSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const openSlibar = useSelector((state) => state?.slibar?.open);
@@ -20,19 +17,7 @@ const Navbar = () => {
 
   const openNav = useSelector((state) => state?.nav);
 
-  const getList = async () => {
-    try {
-      await customerGetTypes().then((res) => {
-        dispatch(getDataTypes(res.data));
-      });
-      await customerGetCategories().then((res) => {
-        dispatch(getDataCategories(res.data));
-      });
-    } catch (error) {}
-  };
-
   useEffect(() => {
-    getList();
     dispatch(idNavOpen(null));
   }, []);
 

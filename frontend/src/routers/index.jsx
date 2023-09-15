@@ -24,11 +24,12 @@ import DetailProduct from "../auth/pages/Product/Detail";
 import DefaultLayoutCustomer from "../customer/layouts/DefaultLayout";
 import Home from "../customer/pages/Home";
 import Product from "../customer/pages/Product";
-import Collection from "../customer/pages/Collection";
+import Lookbook from "../customer/pages/Lookbook";
 import Type from "../customer/pages/Type";
 import Category from "../customer/pages/Category";
 import Cart from "../customer/pages/Cart";
 import Checkout from "../customer/pages/Checkout";
+import Collection from "../customer/pages/Collection";
 
 export const Private = [
   {
@@ -137,12 +138,17 @@ export const Public = [
     layout: DefaultLayoutCustomer,
   },
   {
-    path: "/:slugProduct.html",
+    path: "/p/:slugProduct.html",
     element: Product,
     layout: DefaultLayoutCustomer,
   },
   {
     path: "/lookbook",
+    element: Lookbook,
+    layout: DefaultLayoutCustomer,
+  },
+  {
+    path: "/lookbook/:slugCollection",
     element: Collection,
     layout: DefaultLayoutCustomer,
   },
